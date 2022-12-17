@@ -1,4 +1,6 @@
+import { AuthMode } from "models/types";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getAuthToken } from "util/auth";
 import { getGatewayResult } from "util/eden";
 import { withSessionRoute } from "util/withSession";
 
@@ -9,11 +11,13 @@ interface ApiRequest extends NextApiRequest {
     width: number;
     height: number;
     numFrames: number;
+    authMode: AuthMode;
   };
 }
 
 const handler = async (req: ApiRequest, res: NextApiResponse) => {
-  const { initImageUrl1, initImageUrl2, width, height, numFrames } = req.body;
+  const { initImageUrl1, initImageUrl2, width, height, numFrames, authMode } =
+    req.body;
 
   const interpolation_init_images = [initImageUrl1, initImageUrl2];
 
@@ -39,13 +43,15 @@ const handler = async (req: ApiRequest, res: NextApiResponse) => {
     interpolation_seeds: [1e8 * Math.random(), 1e8 * Math.random()],
   };
 
-  if (!req.session.authToken) {
+  const authToken = getAuthToken(authMode, req.session);
+
+  if (!authToken) {
     res.status(401).json({ error: "Not authenticated" });
     return;
   }
 
   try {
-    const result = await getGatewayResult(config, req.session.authToken);
+    const result = await getGatewayResult(config, authToken);
     if (result.error) {
       console.error(result.error);
       return res.status(500).json({ error: "Error generating image" });

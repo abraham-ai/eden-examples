@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import APIKeyTab from "components/tabs/APIKeyTab";
+import AuthTab from "components/tabs/AuthTab/AuthTab";
 import DreamboothTab from "components/tabs/DreamboothTab";
 import GenerateTab from "components/tabs/GenerateTab";
 import InterpolateTab from "components/tabs/InterpolateTab";
@@ -9,9 +9,9 @@ import React from "react";
 
 const tabItems = [
   {
-    label: "API Key",
+    label: "Authenticate",
     key: "tab1",
-    children: <APIKeyTab />,
+    children: <AuthTab />,
   },
   {
     label: "Generate",

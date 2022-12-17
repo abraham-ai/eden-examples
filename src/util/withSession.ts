@@ -7,7 +7,8 @@ import {
 
 declare module "iron-session" {
   interface IronSessionData {
-    authToken?: string;
+    apiKeyToken?: string;
+    ethereumToken?: string;
   }
 }
 

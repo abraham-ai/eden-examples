@@ -29,7 +29,6 @@ export const pollResult = async (
   const response = await axios.post(GATEWAY_URL + "/fetch", {
     taskIds: [prediction_id],
   });
-  console.log(response.data);
   let { status, output } = response.data[0];
   if (status == "complete") {
     let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;

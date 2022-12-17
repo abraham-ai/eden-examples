@@ -1,7 +1,6 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "util/withSession";
-import { CLOSING } from "ws";
 
 interface ApiRequest extends NextApiRequest {
   body: {
@@ -20,7 +19,7 @@ const handler = async (req: ApiRequest, res: NextApiResponse) => {
       apiSecret,
     });
     const { authToken } = gatewayRes.data;
-    req.session.authToken = authToken;
+    req.session.apiKeyToken = authToken;
     await req.session.save();
 
     res.send({ message: "Successfully authenticated key pair" });

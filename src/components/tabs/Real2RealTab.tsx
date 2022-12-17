@@ -1,7 +1,8 @@
 import { Button, Form, Input, InputNumber, Space } from "antd";
 import axios from "axios";
 import VideoResult from "components/VideoResult";
-import { useState } from "react";
+import { AuthContext } from "contexts/AuthContext";
+import { useContext, useState } from "react";
 
 interface Real2RealFormInputs {
   initImageUrl1: string;
@@ -20,6 +21,8 @@ const Real2RealTab = () => {
     numFrames: 90,
   };
 
+  const { selectedAuthMode } = useContext(AuthContext);
+
   const [resultUrl, setResultUrl] = useState<string>("");
   const [generating, setGenerating] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -27,7 +30,10 @@ const Real2RealTab = () => {
   const handleReal2Real = async (values: Real2RealFormInputs) => {
     setGenerating(true);
     try {
-      const response = await axios.post("/api/real2real", values);
+      const response = await axios.post("/api/real2real", {
+        ...values,
+        authMode: selectedAuthMode,
+      });
       setResultUrl(response.data.outputUrl);
     } catch (error) {
       console.error(error);

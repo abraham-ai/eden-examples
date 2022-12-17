@@ -1,7 +1,8 @@
 import { Button, Form, Input, InputNumber, Space } from "antd";
 import axios from "axios";
 import ImageResult from "components/ImageResult";
-import { useState } from "react";
+import { AuthContext } from "contexts/AuthContext";
+import { useContext, useState } from "react";
 
 interface GenerateFormInputs {
   prompt: string;
@@ -16,6 +17,8 @@ const GenerateTab = () => {
     height: 512,
   };
 
+  const { selectedAuthMode } = useContext(AuthContext);
+
   const [form] = Form.useForm();
   const width = Form.useWatch("width", form);
   const height = Form.useWatch("height", form);
@@ -26,7 +29,10 @@ const GenerateTab = () => {
   const handleGenerate = async (values: GenerateFormInputs) => {
     setGenerating(true);
     try {
-      const response = await axios.post("/api/generate", values);
+      const response = await axios.post("/api/generate", {
+        ...values,
+        authMode: selectedAuthMode,
+      });
       setResultUrl(response.data.outputUrl);
     } catch (error) {
       console.error(error);
